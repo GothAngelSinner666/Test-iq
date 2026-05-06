@@ -3,218 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IQ Test Pro</title>
+<title>IQ Test AI</title>
 
 <style>
-* {
+*{
   margin:0;
   padding:0;
   box-sizing:border-box;
   font-family: 'Poppins', sans-serif;
 }
 
-body {
-  background: linear-gradient(135deg,#020617,#0f172a,#1e293b);
+body{
+  background:#020617;
   color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
 }
 
-/* CARD */
-.card {
-  width:360px;
-  padding:25px;
-  border-radius:20px;
-  backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.05);
-  box-shadow:0 0 50px rgba(0,0,0,0.6);
-  text-align:center;
-  animation:fade 0.6s ease;
-}
-
-h1,h2 {
-  margin-bottom:10px;
-}
-
-/* BUTTON */
-button {
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-  background: linear-gradient(45deg,#38bdf8,#22c55e);
-  color:black;
-  transition:0.3s;
-}
-
-button:hover {
-  transform:scale(1.05);
-}
-
-/* PROGRESS */
-.progress {
-  height:8px;
-  background:rgba(255,255,255,0.1);
-  border-radius:10px;
-  margin:15px 0;
-}
-
-.bar {
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#38bdf8,#22c55e);
-  border-radius:10px;
-  transition:0.4s;
-}
-
-/* DASHBOARD */
-.stat {
+/* NAVBAR */
+nav{
   display:flex;
   justify-content:space-between;
-  margin:10px 0;
-  padding:10px;
+  padding:20px 40px;
+  position:fixed;
+  width:100%;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
+}
+
+nav h2{
+  color:#38bdf8;
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+}
+
+.hero h1{
+  font-size:45px;
+}
+
+.hero p{
+  margin-top:10px;
+  opacity:0.7;
+}
+
+.btn{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
   border-radius:10px;
+  background:linear-gradient(45deg,#38bdf8,#22c55e);
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* SECTION */
+.section{
+  padding:80px 20px;
+  text-align:center;
+}
+
+.card{
+  margin:20px auto;
+  max-width:300px;
+  padding:20px;
+  border-radius:15px;
   background:rgba(255,255,255,0.05);
 }
 
-/* ANIM */
-@keyframes fade {
-  from {opacity:0; transform:translateY(10px);}
-  to {opacity:1; transform:translateY(0);}
+/* TEST MODAL */
+.test{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#020617;
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 
-.big {
-  font-size:50px;
-  margin:15px 0;
-  text-shadow:0 0 20px #38bdf8;
+.box{
+  background:#1e293b;
+  padding:25px;
+  border-radius:15px;
+  width:300px;
+  text-align:center;
+}
+
+button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#38bdf8;
+  color:black;
 }
 </style>
 </head>
 
 <body>
 
-<div id="app" class="card"></div>
+<nav>
+  <h2>IQ AI</h2>
+  <button class="btn" onclick="startTest()">Mulai</button>
+</nav>
+
+<section class="hero">
+  <h1>Unlock Your Brain Potential</h1>
+  <p>AI-powered IQ test yang viral 🔥</p>
+  <button class="btn" onclick="startTest()">Start Test</button>
+</section>
+
+<section class="section">
+  <h2>Kenapa pakai ini?</h2>
+
+  <div class="card">⚡ Cepat & interaktif</div>
+  <div class="card">🧠 AI simulated analysis</div>
+  <div class="card">🔥 Hasil viral & shareable</div>
+</section>
+
+<section class="section">
+  <h2>Cara kerja</h2>
+  <p>Jawab pertanyaan → AI analisis → dapatkan IQ kamu</p>
+</section>
+
+<div class="test" id="test">
+  <div class="box" id="app"></div>
+</div>
 
 <script>
 let step=0;
 let score=0;
-let iq=0;
 
-function render(html){
-  document.getElementById("app").innerHTML=html;
-}
-
-function landing(){
-  render(`
-    <h1>🧠 IQ Test Pro</h1>
-    <p>Apakah kamu termasuk 1% orang jenius?</p>
-    <button onclick="start()">Mulai Tes</button>
-  `);
-}
-
-function start(){
-  loading("Scanning brain...");
-  setTimeout(next,2000);
-}
-
-function progress(){
-  let p=(step/3)*100;
-  return `<div class="progress"><div class="bar" style="width:${p}%"></div></div>`;
+function startTest(){
+  document.getElementById("test").style.display="flex";
+  next();
 }
 
 function next(){
   step++;
 
   if(step===1){
-    render(`
-      ${progress()}
-      <h2>15 ÷ 3 = ?</h2>
+    app.innerHTML=`
+      <h3>2 + 2 = ?</h3>
+      <button onclick="ans(4)">4</button>
       <button onclick="ans(5)">5</button>
-      <button onclick="ans(6)">6</button>
-    `);
+    `;
   }
 
   else if(step===2){
-    render(`
-      ${progress()}
-      <h2>2, 4, 8, 16, ... ?</h2>
-      <button onclick="ans(32)">32</button>
-      <button onclick="ans(24)">24</button>
-    `);
+    app.innerHTML=`
+      <h3>5 x 3 = ?</h3>
+      <button onclick="ans(15)">15</button>
+      <button onclick="ans(10)">10</button>
+    `;
   }
 
   else{
-    loading("Analyzing intelligence...");
-    setTimeout(result,2500);
+    let iq=100+(score*10)+Math.floor(Math.random()*10);
+    app.innerHTML=`
+      <h2>IQ kamu: ${iq}</h2>
+      <button onclick="location.reload()">Ulangi</button>
+    `;
   }
 }
 
 function ans(v){
-  if((step===1 && v===5)||(step===2 && v===32)){
+  if((step===1 && v===4)||(step===2 && v===15)){
     score++;
   }
-  loading("Processing...");
-  setTimeout(next,1200);
+  next();
 }
-
-function loading(text){
-  render(`
-    <h2>${text}</h2>
-    <p>Tunggu sebentar...</p>
-  `);
-}
-
-function result(){
-  let base=95+(score*15);
-  iq=base+Math.floor(Math.random()*10);
-
-  render(`
-    <h2>Hasil IQ kamu</h2>
-    <div class="big">${iq}</div>
-    <button onclick="dashboard()">Lihat Dashboard</button>
-  `);
-}
-
-function dashboard(){
-  render(`
-    <h2>📊 Dashboard</h2>
-
-    <div class="stat">
-      <span>IQ Score</span>
-      <b>${iq}</b>
-    </div>
-
-    <div class="stat">
-      <span>Status</span>
-      <b>${iq>115?"Genius":"Above Average"}</b>
-    </div>
-
-    <div class="stat">
-      <span>Benar</span>
-      <b>${score}/2</b>
-    </div>
-
-    <div class="stat">
-      <span>Akurasi</span>
-      <b>${score*50}%</b>
-    </div>
-
-    <button onclick="share()">Share</button>
-    <button onclick="landing()">Ulangi</button>
-  `);
-}
-
-function share(){
-  navigator.clipboard.writeText(window.location.href);
-  alert("Link disalin 🔥");
-}
-
-landing();
 </script>
 
 </body>
