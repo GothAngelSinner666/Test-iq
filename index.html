@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Test IQ</title>
+<meta charset="UTF-8">
+<title>IQ Test Viral</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+.box {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #38bdf8;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.progress {
+  height: 10px;
+  background: #334155;
+  border-radius: 5px;
+  margin: 15px 0;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: #38bdf8;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+</style>
 </head>
+
 <body>
-  <h1>Website Pertama Gw 🚀</h1>
-  <p>Berhasil deploy di Vercel!</p>
+
+<div class="box" id="app">
+  <h1>🧠 IQ Test</h1>
+  <p>Apakah kamu jenius? 🤔</p>
+  <button onclick="start()">Mulai Tes</button>
+</div>
+
+<script>
+let step = 0;
+let score = 0;
+
+function start() {
+  showLoading("Menganalisis otak...");
+  setTimeout(nextQuestion, 2000);
+}
+
+function updateProgress() {
+  let percent = (step / 3) * 100;
+  return `<div class="progress"><div class="bar" style="width:${percent}%"></div></div>`;
+}
+
+function nextQuestion() {
+  step++;
+
+  if (step === 1) {
+    document.getElementById("app").innerHTML = `
+      ${updateProgress()}
+      <h2>2 + 2 = ?</h2>
+      <button onclick="answer(4)">4</button>
+      <button onclick="answer(5)">5</button>
+    `;
+  }
+
+  else if (step === 2) {
+    document.getElementById("app").innerHTML = `
+      ${updateProgress()}
+      <h2>5 x 3 = ?</h2>
+      <button onclick="answer(15)">15</button>
+      <button onclick="answer(10)">10</button>
+    `;
+  }
+
+  else {
+    showLoading("Menghitung IQ...");
+    setTimeout(showResult, 2500);
+  }
+}
+
+function answer(val) {
+  if ((step === 1 && val === 4) || (step === 2 && val === 15)) {
+    score++;
+  }
+  showLoading("Memproses jawaban...");
+  setTimeout(nextQuestion, 1000);
+}
+
+function showLoading(text) {
+  document.getElementById("app").innerHTML = `
+    <h2>${text}</h2>
+    <p>Mohon tunggu...</p>
+  `;
+}
+
+function showResult() {
+  let base = 90 + (score * 15);
+  let random = Math.floor(Math.random() * 10);
+  let iq = base + random;
+
+  document.getElementById("app").innerHTML = `
+    <h2>Hasil IQ kamu:</h2>
+    <h1 style="font-size:50px;">${iq}</h1>
+    <p>${iq > 110 ? "Genius 😎" : "Lumayan pintar 👍"}</p>
+
+    <button onclick="share()">Share ke teman</button>
+    <button onclick="location.reload()">Coba lagi</button>
+  `;
+}
+
+function share() {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Link berhasil disalin! Kirim ke teman kamu 🔥");
+}
+</script>
+
 </body>
 </html>
