@@ -2,62 +2,98 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>IQ Test Viral</title>
+<title>IQ Test Pro</title>
 
 <style>
-body {
-  font-family: Arial;
-  background: linear-gradient(135deg, #0f172a, #020617);
-  color: white;
-  text-align: center;
-  padding: 30px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.box {
-  background: #1e293b;
-  padding: 25px;
-  border-radius: 15px;
-  max-width: 400px;
-  margin: auto;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.container {
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 30px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  animation: fadeIn 0.8s ease;
+}
+
+h1 {
+  margin-bottom: 10px;
 }
 
 button {
-  display: block;
   width: 100%;
-  margin-top: 10px;
   padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
   border: none;
-  border-radius: 8px;
-  background: #38bdf8;
+  background: linear-gradient(45deg, #38bdf8, #22c55e);
   color: black;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 
 .progress {
-  height: 10px;
-  background: #334155;
-  border-radius: 5px;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
   margin: 15px 0;
+  overflow: hidden;
 }
 
 .bar {
   height: 100%;
   width: 0%;
-  background: #38bdf8;
-  border-radius: 5px;
-  transition: 0.3s;
+  background: linear-gradient(90deg, #38bdf8, #22c55e);
+  transition: 0.4s;
+}
+
+.fade {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.big {
+  font-size: 55px;
+  margin: 15px 0;
+}
+
+.glow {
+  text-shadow: 0 0 15px #38bdf8;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box" id="app">
+<div class="container" id="app">
   <h1>🧠 IQ Test</h1>
-  <p>Apakah kamu jenius? 🤔</p>
-  <button onclick="start()">Mulai Tes</button>
+  <p>Apakah kamu termasuk 1% orang jenius?</p>
+  <button onclick="start()">Mulai Sekarang</button>
 </div>
 
 <script>
@@ -65,75 +101,78 @@ let step = 0;
 let score = 0;
 
 function start() {
-  showLoading("Menganalisis otak...");
-  setTimeout(nextQuestion, 2000);
+  loading("Scanning brain...");
+  setTimeout(next, 2000);
 }
 
-function updateProgress() {
-  let percent = (step / 3) * 100;
-  return `<div class="progress"><div class="bar" style="width:${percent}%"></div></div>`;
+function progress() {
+  let p = (step / 3) * 100;
+  return `<div class="progress"><div class="bar" style="width:${p}%"></div></div>`;
 }
 
-function nextQuestion() {
+function next() {
   step++;
 
   if (step === 1) {
-    document.getElementById("app").innerHTML = `
-      ${updateProgress()}
-      <h2>2 + 2 = ?</h2>
-      <button onclick="answer(4)">4</button>
-      <button onclick="answer(5)">5</button>
-    `;
+    render(`
+      ${progress()}
+      <h2>Berapa hasil 12 ÷ 3?</h2>
+      <button onclick="ans(4)">4</button>
+      <button onclick="ans(6)">6</button>
+    `);
   }
 
   else if (step === 2) {
-    document.getElementById("app").innerHTML = `
-      ${updateProgress()}
-      <h2>5 x 3 = ?</h2>
-      <button onclick="answer(15)">15</button>
-      <button onclick="answer(10)">10</button>
-    `;
+    render(`
+      ${progress()}
+      <h2>Pola: 2, 4, 8, 16, ... ?</h2>
+      <button onclick="ans(32)">32</button>
+      <button onclick="ans(24)">24</button>
+    `);
   }
 
   else {
-    showLoading("Menghitung IQ...");
-    setTimeout(showResult, 2500);
+    loading("Analyzing intelligence...");
+    setTimeout(result, 2500);
   }
 }
 
-function answer(val) {
-  if ((step === 1 && val === 4) || (step === 2 && val === 15)) {
+function ans(val) {
+  if ((step === 1 && val === 4) || (step === 2 && val === 32)) {
     score++;
   }
-  showLoading("Memproses jawaban...");
-  setTimeout(nextQuestion, 1000);
+  loading("Processing...");
+  setTimeout(next, 1200);
 }
 
-function showLoading(text) {
-  document.getElementById("app").innerHTML = `
+function loading(text) {
+  render(`
     <h2>${text}</h2>
-    <p>Mohon tunggu...</p>
-  `;
+    <p>Tunggu sebentar...</p>
+  `);
 }
 
-function showResult() {
-  let base = 90 + (score * 15);
-  let random = Math.floor(Math.random() * 10);
-  let iq = base + random;
+function result() {
+  let base = 95 + (score * 15);
+  let iq = base + Math.floor(Math.random() * 10);
 
-  document.getElementById("app").innerHTML = `
-    <h2>Hasil IQ kamu:</h2>
-    <h1 style="font-size:50px;">${iq}</h1>
-    <p>${iq > 110 ? "Genius 😎" : "Lumayan pintar 👍"}</p>
+  render(`
+    <h2>Hasil IQ kamu</h2>
+    <div class="big glow">${iq}</div>
+    <p>${iq > 115 ? "Genius 😎" : "Di atas rata-rata 🔥"}</p>
 
     <button onclick="share()">Share ke teman</button>
-    <button onclick="location.reload()">Coba lagi</button>
-  `;
+    <button onclick="location.reload()">Ulangi</button>
+  `);
+}
+
+function render(html) {
+  document.getElementById("app").innerHTML = `<div class="fade">${html}</div>`;
 }
 
 function share() {
   navigator.clipboard.writeText(window.location.href);
-  alert("Link berhasil disalin! Kirim ke teman kamu 🔥");
+  alert("Link disalin! Kirim ke teman 🔥");
 }
 </script>
 
